@@ -1,9 +1,7 @@
-
-
-
 import React from 'react';
-import { View, Text } from 'react-native';
-
+import { View,ScrollView, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { imageMap, RootStackParamList } from '../navigation/types';
+import { useRoute, RouteProp } from '@react-navigation/native';
 const CartScreen = () => {
 	return (
 		<View>

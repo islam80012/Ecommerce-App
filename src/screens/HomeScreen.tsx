@@ -1,36 +1,30 @@
 import React, { useState } from 'react';
 import { SearchBar } from '@rneui/themed';
 import { View, Text, StyleSheet,TouchableOpacity,ScrollView,Image } from 'react-native';
-import { Link } from 'expo-router';
+import { Link,useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-// import { NavigationContainer } from '@react-navigation/native';
-// import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DrawerActions } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../navigation/types'; 
+import { RootStackParamList,Category,CategoryList,Product,imageMap } from '../navigation/types';
 import { Pressable } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type SearchBarComponentProps = {};
-type NavigationProp = DrawerNavigationProp<RootDrawerParamList, 'Home'>;
+
+type NavigationProp = DrawerNavigationProp<RootDrawerParamList>;
+
 
 const HomeScreen: React.FunctionComponent<SearchBarComponentProps> = () => {
+const stackNavigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+const navigation = useNavigation<NavigationProp>();
 const [search, setSearch] = useState("");
 const [hoveredElem, setHoveredElem] = useState<string | null>(null);
 const [category, setCategory] = useState<Category | null>(null);
+ const router = useRouter();
 
 const [isHovered, setIsHovered] = useState(false);
-// Define the categories and products
-  const CategoryList = ["All Categories", "New", "Best Sellers", "Discount"] as const;
-  type Category = typeof CategoryList[number];
-  interface Product {
-    id : string, // unique identifier for the product
-    category : Category// category of the product
-    title : string, // title of the product
-    description: string, // description of the product
-    price: number, // price of the product
-    image : string, // image URL of the product
-  }
 // Sample products data
   const userProducts: Product[] = [
   {id: "1", category: "New", title: "Wireless Bluetooth Earbuds", description: "Crystal clear sound with noise cancellation", price: 79.99, image: "1"},
@@ -49,28 +43,15 @@ const [isHovered, setIsHovered] = useState(false);
   {id: "14", category: "All Categories", title: "Fitness Tracker", description: "Tracks steps, sleep and heart rate", price: 59.50, image: "8"},
   {id: "15", category: "All Categories", title: "Air Fryer", description: "Digital air fryer with multiple cooking functions", price: 89.99, image: "8"}
 ];
-  // Map of image paths for the products
-const imageMap: { [key: string]: any } = {
-  "1": require("../images/img1(3).jpg"),
-  "2": require("../images/img2.jpg"),
-  "3": require("../images/img3.jpg"),
-  "4": require("../images/img4.jpg"),
-  "5": require("../images/img5.jpg"),
-  "6": require("../images/img6.jpg"),
-  "7": require("../images/img7.jpg"),
-  "8": require("../images/img8.jpg"),
-};
 const filteredProducts = userProducts.filter((product) =>
       !category || category === "All Categories" || product.category === category)
-const navigation = useNavigation<NavigationProp>();
 const updateSearch = (search: string) => {
   setSearch(search);
 };
 
 return (
   <View style={styles.mainView}>
-
-      <View style={styles.container1}>
+     <View style={styles.container1}>
         <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
               <Ionicons name="menu"  style={styles.icons}/>
         </TouchableOpacity>
@@ -121,7 +102,16 @@ return (
            <View key={product.id}  style={styles.ProductsView}> {/* New container */}
       {/* Pressable only wraps the Image */}
       <Pressable 
-        onPressIn={() => setHoveredElem(product.id)}
+        onPressIn={() => { 
+          setHoveredElem(product.id);
+         stackNavigation.navigate('ChoosenProduct', {
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          image: product.image as keyof typeof imageMap, 
+          description:product.description
+      });
+  }}
         onPressOut={() => setHoveredElem(null)}
         style={[
           styles.productItem,
@@ -130,13 +120,16 @@ return (
       >
         <Image 
           source={imageMap[product.image]} 
-          style={styles.productImage}
+          style={styles.ProductImage}
         />
       </Pressable>
 
       {/* Text placed outside Pressable but in the same container */}
       <Text style={styles.ProductText}>
-        {product.title}{'\n'} ${product.price.toFixed(2)}
+        {product.title}
+      </Text>
+      <Text style={styles.ProductPrice}>
+        ${product.price.toFixed(2)}
       </Text>
     </View>
         ))}
@@ -218,7 +211,7 @@ contentContainer: {
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     flexGrow: 1,
-    minHeight: '90%'
+    minHeight: '90%',
 },
 elem: {
   marginBottom: 10,
@@ -262,13 +255,20 @@ ProductsView: {
     elevation: 3, // Elevation for Android
   },
   ProductText: {
-    fontSize: 15,
-    fontWeight: 'bold',
+    fontSize: 16,
+    // fontWeight: 'bold',
     marginTop: 10,
     marginLeft: 10,
     color: 'black',
   },
-  productImage: {
+  ProductPrice: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    // color: '#ff686e',
+    marginLeft: 10,
+    marginBottom: 10,
+  },
+  ProductImage: {
   width: '100%',
   height: 150,
   borderRadius: 10,

@@ -5,6 +5,9 @@ export type RootDrawerParamList = {
 
 export type RootStackParamList = {
   Root: undefined; // le drawer
+  Login: undefined;
+  SignUp: undefined;
+  ResetPassword: undefined;
   ChoosenProduct: {
     id: string;
     title: string;

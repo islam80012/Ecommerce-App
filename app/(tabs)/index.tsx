@@ -5,6 +5,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../../src/screens/HomeScreen';
 import CartScreen from '../../src/screens/CartScreen';
 import ChoosenProduct from '../../src/screens/ChoosenProduct';
+import LoginScreen from '../../src/screens/Authentification/LoginScreen';
+import SignUpScreen from '../../src/screens/Authentification/SignUpScreen';
+import ResetPasswdScreen from '../../src/screens/Authentification/ResetPasswdScreen';
 import { Ionicons } from '@expo/vector-icons';
 
 const Drawer = createDrawerNavigator();
@@ -54,6 +57,21 @@ export default function App() {
           name="ChoosenProduct" 
           component={ChoosenProduct} 
           options={{ title: 'Product Details' }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen} // Assurez-vous que le chemin est correct
+          options={{ title: 'Login' }}
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUpScreen} // Assurez-vous que le chemin est correct
+          options={{ title: 'Sign Up' }}
+        />
+        <Stack.Screen
+          name="ResetPasswd"
+          component={ResetPasswdScreen} // Assurez-vous que le chemin est correct
+          options={{ title: 'Reset Password' }}
         />
       </Stack.Navigator>
   );

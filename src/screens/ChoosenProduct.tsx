@@ -1,14 +1,20 @@
 import React from "react";
 import { View,ScrollView, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { imageMap, RootStackParamList } from '../navigation/types';
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { useRoute, RouteProp,useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export default function ChoosenProduct() {
   const route = useRoute<RouteProp<RootStackParamList, 'ChoosenProduct'>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { id, title, price, image,description } = route.params;
 
+  const Buy =() => {
+    navigation.navigate('Login');
+  }
+
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       {/* Product Image */}
       <View style={styles.imageContainer}>
         <Image 
@@ -45,10 +51,10 @@ export default function ChoosenProduct() {
         </View>
 
         {/* Buy Button */}
-        <TouchableOpacity style={styles.buyButton}>
+        <TouchableOpacity onPress={Buy} style={styles.buyButton}>
           <Text style={styles.buyButtonText}>Buy Now</Text>
         </TouchableOpacity>
-        <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae saepe eligendi quod molestias officiis perferendis tempore dolorum, unde nisi laborum omnis a, dicta, quidem laboriosam velit nostrum. Nulla, porro necessitatibus.</Text>
+        {/* <Text>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aspernatur maxime reiciendis repudiandae obcaecati esse explicabo quae omnis? Totam ipsam, minus rem repudiandae accusantium quas veniam cupiditate modi repellendus aut? Quam.</Text> */}
       </View>
     </ScrollView>
   );
@@ -59,6 +65,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
+  contentContainer: {
+  paddingBottom: 70, // Extra space at bottom
+  flexGrow: 1,      // Important for scrolling
+},
   imageContainer: {
     width: '100%',
     height: 320,
